@@ -1,26 +1,33 @@
-# SmolVLA Finetuning for Robotic Manipulation
+# Robotic Arm with MuJoCo
 
-Fine-tuning SmolVLA for SO-101 pick-and-place tasks, with colour and lighting augmentation to evaluate robustness under changing visual conditions.
+A robotics simulation project using the MuJoCo physics engine. It includes a 6-DOF robotic arm model, a quadruped model, and an arm viewer for exploring robot motion.
 
-## Project Details
+## Requirements
 
-- **Model:** `lerobot/smolvla_base`
-- **Dataset:** `lerobot/svla_so101_pickplace`
-- **Robot:** SO-101 robotic arm
-- **Framework:** LeRobot
-- **Task:** Pick up a cube and place it in a box.
+- Python 3
+- Dependencies listed in `requirements.txt`
 
-## Approach
+## Setup
 
-- Split episodes by cube position to balance training and validation data.
-- Apply brightness, contrast, saturation, and hue augmentation.
-- Align camera inputs and action sequences with the model.
-- Evaluate predicted joint actions against recorded actions.
-
-## Results
-
-The reported joint-action accuracy improved from **60.92% to 87.66%** with position-balanced splitting. This measures predictions within 5% of each joint's range; it does not measure completed pick-and-place tasks.
+```powershell
+python -m venv mojoco_venv
+.\mojoco_venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
 
 ## Usage
 
-Run `01_train_smolvla.ipynb` to fine-tune the model, then `02_eval_offline.ipynb` to evaluate it.
+Open the robotic arm simulation:
+
+```powershell
+python arm/arm_viewer.py
+```
+
+Record a demo video:
+
+```powershell
+python arm/arm_viewer.py --video
+```
+
+Videos are saved in the `media` folder.
