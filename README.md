@@ -1,55 +1,26 @@
-# robotics-with-MuJoCo
+# SmolVLA Finetuning for Robotic Manipulation
 
-Pick-and-place manipulation, and quadruped locomotion using the MoJoCo physics engine
+Fine-tuning SmolVLA for SO-101 pick-and-place tasks, with colour and lighting augmentation to evaluate robustness under changing visual conditions.
 
-# Overview
+## Project Details
 
-1. [About the project](#about-the-project-)
-2. [Instructions for setup](#instructions-for-setup-)
-3. [Load models and visualize](#load-models-and-visualize-)
-4. 
+- **Model:** `lerobot/smolvla_base`
+- **Dataset:** `lerobot/svla_so101_pickplace`
+- **Robot:** SO-101 robotic arm
+- **Framework:** LeRobot
+- **Task:** Pick up a cube and place it in a box.
 
----
-### About the project :
+## Approach
 
-We use the MoJoCo physics engine on two robots,
+- Split episodes by cube position to balance training and validation data.
+- Apply brightness, contrast, saturation, and hue augmentation.
+- Align camera inputs and action sequences with the model.
+- Evaluate predicted joint actions against recorded actions.
 
-1. A **6-DOF robot manipulator** that does forward kinematics, inverse kinematics, PD control, and a full **pick-and-place** task.
-2. A **quadruped robot** that stands up, balances against a push, and moves forward with trot gait across the floor.
+## Results
 
-### Instructions for setup :
-Create virtual environment, activate the environment and install all the dependencies using following commands
+The reported joint-action accuracy improved from **60.92% to 87.66%** with position-balanced splitting. This measures predictions within 5% of each joint's range; it does not measure completed pick-and-place tasks.
 
-```bash
-python3 -m venv mojoco_venv
-source mojoco_venv/bin/activate
+## Usage
 
-pip install --upgrade pip
-
-pip install -r requirements.txt
-```
-### Load models and visualize :
-
-Both robot folders has a visulaization scripts : `arm/arm_viewer.py` and `quadruped/quadruped_viewer.py`, 
-using which we can load and visulaize the model. 
-
-```bash
-# Interactive viewer (default custom model : arm6dof.xml)
-python arm/arm_viewer.py
-# To record a demo video (runs headless) add --video
-
-# Load a MuJoCo menagerie model
-python arm/arm_viewer.py --menagerie <model_name>
-# To load a specific scene (default: scene.xml) add --scene <scene_file>
-# To record video of robot gently waving its actuators add --video
-# To load a model variant add --variant <variant_name>
-```
-Usage examples:
-
-* `--menagerie panda_mj_description`
-* `--scene mjx_scene.xml` or `--scene none` for bear model
-* `--variant panda_nohand` for no gripper variant
-
-Videos are saved to `media/<robot_model>.mp4`.
-
-Checkout all the available robot model names and there variants at: [robot-descriptions]( https://github.com/robot-descriptions/robot_descriptions.py) and [mujoco_menagerie](https://github.com/google-deepmind/mujoco_menagerie.git) repositories.# Robotic-Arm
+Run `01_train_smolvla.ipynb` to fine-tune the model, then `02_eval_offline.ipynb` to evaluate it.
